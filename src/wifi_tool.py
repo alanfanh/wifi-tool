@@ -19,8 +19,8 @@ class WiFi_tool(object):
         self.name=self.iface.name()
         print(self.name)
         return self.name
+
     def scan_wifi(self):
-        
         # 起始获得的是列表，列表中存放的是无线网卡对象。
         # 可能一台电脑有多个网卡，请注意选择
         # 如果网卡选择错了，程序会卡住，不出结果。
@@ -85,14 +85,14 @@ class WiFi_tool(object):
         text_str=re.read().strip()
         return text_str
 
-    def test_wifi(self,time,f):
-        i=0
-        while i<= f:
-            self.connect_wifi(ssid,pwd)
-            # time.sleep(time)
-            self.sys_ping(time)
-            self.diconnect_wifi()
-            f=f+1
+    # def test_wifi(self,time,f):
+    #     i=0
+    #     while i<= f:
+    #         self.connect_wifi(ssid,pwd)
+    #         # time.sleep(time)
+    #         self.sys_ping(time)
+    #         self.diconnect_wifi()
+    #         f=f+1
 
 # class WRLO:
     # def write(self,msg):    
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     test=WiFi_tool()
     # test.scan_wifi()
     # test.get_interface_name()
-    # test.connect_wifi(ssid='11111lvzhengfu',pwd='12345678')
+    # test.connect_wifi(ssid='WiFi-Test',pwd='12345678')
     test.get_current_ssid()
     # test.test_wifi(time=5,f=3)
     # sys.stdout = WRLO()
