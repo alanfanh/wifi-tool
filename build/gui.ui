@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>WIFI-Test</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTextEdit" name="log_text">
@@ -188,7 +188,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="disconnect_2">
+   <widget class="QPushButton" name="test">
     <property name="geometry">
      <rect>
       <x>550</x>
@@ -221,20 +221,20 @@
      <x>0</x>
      <y>0</y>
      <width>671</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>help</string>
     </property>
-    <addaction name="action"/>
+    <addaction name="help"/>
     <addaction name="separator"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action">
+  <action name="help">
    <property name="text">
     <string>帮助信息</string>
    </property>
