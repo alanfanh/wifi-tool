@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from PyQt4 import QtCore,QtGui
+from PySide6 import QtCore,QtGui,QtWidgets
 from gui import Ui_MainWindow
 import sys,os,time
 import configparser
@@ -29,7 +29,7 @@ def parser_cfg(filename):
             kargs[opt][k]=v
     return kargs
     
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow,self).__init__()
         self.ui=Ui_MainWindow()
@@ -130,27 +130,32 @@ class MainWindow(QtGui.QMainWindow):
     #显示日志打印    
     def show_log(self,msg):
         self.ui.log_text.setText(msg)
-    #显示帮助信息
+
     def about(self):
-        QtGui.QMessageBox.about(self,u"帮助信息",u"Auther：FanHao\n1、工具默认加密方式为WPA2-PSK/AES，输入SSID和password，点击connect按钮能够自动连接无线。点击disconnect按钮能够断开无线连接。\n2、右边test按钮主要用来测试：时间间隔为Time时，无线网卡自动连接与断开。Frequency代表测试次数。\n3、当Time为0时，点击test按钮，工具不会进行无线自动连接与断开测试，后台只会一直发ping包。")
+        #显示帮助信息
+        QtWidgets.QMessageBox.about(self,u"帮助信息",u"Auther：FanHao\n1、工具默认加密方式为WPA2-PSK/AES，输入SSID和password，点击connect按钮能够自动连接无线。点击disconnect按钮能够断开无线连接。\n2、右边test按钮主要用来测试：时间间隔为Time时，无线网卡自动连接与断开。Frequency代表测试次数。\n3、当Time为0时，点击test按钮，工具不会进行无线自动连接与断开测试，后台只会一直发ping包。")
+    
     def closeEvent(self,event):
-        reply = QtGui.QMessageBox.question(self,'Message','Are you sure to quit?',QtGui.QMessageBox.Yes,QtGui.QMessageBox.No)
-        if reply == QtGui.QMessageBox.Yes:
+        reply = QtWidgets.QMessageBox.question(self,'Message','Are you sure to quit?',QtWidgets.QMessageBox.Yes,QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
             event.accept()
         else:
             event.ignore()
-        
+ 
 class WiFi_Connect(QtCore.QThread):
-    conn_signal=QtCore.pyqtSignal(str)
+    conn_signal=QtCore.Signal(str)
     def __init__(self,parent=None):
         super(WiFi_Connect,self).__init__(parent)
         self.parent=parent
         self.start_flag=0
+
     def start_test(self):
         self.start()
+
     def stop_test(self):
         self.terminate()
         self.wait()
+
     def run(self):
         # self.parent.showstate('Connecting WiFi')
         #获取参数
@@ -169,17 +174,21 @@ class WiFi_Connect(QtCore.QThread):
             self.parent.showstate(u'Connected WiFi')
         else:
             self.parent.showstate(u'Connect WiFi Failed')
+
 class WiFi_Disconnect(QtCore.QThread):
-    dis_signal=QtCore.pyqtSignal(str)
+    dis_signal=QtCore.Signal(str)
     def __init__(self,parent=None):
         super(WiFi_Disconnect,self).__init__(parent)
         self.parent=parent
         self.start_flag=0
+
     def start_test(self):
         self.start()
+
     def stop_test(self):
         self.terminate()
         self.wait()
+
     def run(self):
         self.parent.showstate('Disonnecting WiFi')
         #初始化无线工具对象
@@ -190,10 +199,11 @@ class WiFi_Disconnect(QtCore.QThread):
             cur_ssid=connect.get_current_ssid()
             self.dis_signal.emit(cur_ssid)
             time.sleep(0.2)
-            self.parent.showstate(u'Disconnected WiFi')        
+            self.parent.showstate(u'Disconnected WiFi')
+
 #无线自动连接/ping包/断开子线程
 class WiFi_Test(QtCore.QThread):
-    log_signal=QtCore.pyqtSignal(str)
+    log_signal=QtCore.Signal(str)
     def __init__(self,parent=None):
         super(WiFi_Test,self).__init__(parent)
         self.parent=parent
@@ -225,7 +235,7 @@ class WiFi_Test(QtCore.QThread):
                 i=i+1
 #无线扫描子线程    
 class WiFi_Scan(QtCore.QThread):
-    scan_signal=QtCore.pyqtSignal(str)
+    scan_signal=QtCore.Signal(str)
     def __init__(self,parent=None):
         super(WiFi_Disconnect,self).__init__(parent)
         self.parent=parent
@@ -239,7 +249,7 @@ class WiFi_Scan(QtCore.QThread):
         self.parent.showstate('Scaning WiFi')
         #初始化无线工具对象
         Scan=WiFi_tool()
-        re=connect.scan_wifi()
+        re=Scan.scan_wifi()
         time.sleep(0.2)
         
         self.scan_signal.emit(re)
@@ -247,7 +257,7 @@ class WiFi_Scan(QtCore.QThread):
         self.parent.showstate(u'Scan WiFi Complete')
 
 if __name__ == "__main__":
-    app=QtGui.QApplication(sys.argv)
+    app=QtWidgets.QApplication(sys.argv)
     wm=MainWindow()
     wm.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
